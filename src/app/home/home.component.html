@@ -1,0 +1,123 @@
+<main class="home-container">
+
+  <div class="home-info flex flex-col justify-center text-center pt-10">
+    <h2 class="text-4xl font-bold pb-5">BOOK YOUR BARBER</h2>
+    <div class="px-3">
+      <p class="">Great Hair Doesn't Happen By Chance. It Happens By Appointment!</p>
+      <p class="">So Dont't Wait And Book Your Appointment Now!</p>
+    </div>
+  </div>
+
+  <div class="image-container flex justify-center p-6">
+    <div class="image p-2 lg:w-1/2">
+      <img src="assets/image.jpg" />
+    </div>
+  </div>
+
+
+<section class="form-container flex justify-center">
+  <div class="form text-center mb-3">
+    <h2 class="p-4">BOOK YOUR APPOINTMENT</h2>
+    <mat-card>
+      <form (submit)="onSubmit()" class="" [formGroup]="form">
+
+        <div class="name-surname flex flex-wrap flex-col content-center lg:flex-row lg:justify-center lg:mb-3">
+          <mat-form-field class="name-surname mb-2 w-11/12 lg:w-40 lg:mx-1">
+            <input matInput type="text" placeholder="First Name" formControlName="name" required class="h-10">
+            <mat-error *ngIf="form.controls['name'].invalid">
+              Please enter your first name.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="name-surname mb-2 w-11/12 lg:w-40 lg:mx-1">
+            <input matInput type="text" placeholder="Last Name" formControlName="surname" required>
+            <mat-error *ngIf="form.controls['surname'].invalid">
+            Please enter your last name.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="email-contact flex flex-wrap flex-col content-center lg:flex-row lg:justify-center">
+          <div class="w-ful lg:w-auto lg:mb-3">
+            <mat-form-field class="email-contact mb-2 w-11/12 lg:w-40 lg:mx-1">
+              <input matInput type="email" placeholder="Email" formControlName="email" required>
+              <mat-error *ngIf="form.controls['email'].invalid">
+                Please enter a valid email.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        
+          <div class="w-full lg:w-auto">
+            <mat-form-field class="email-contact mb-2 w-11/12 lg:w-40 lg:mx-1 lg:mb-2">
+              <input matInput type="tel" placeholder="Contact Number" formControlName="contactNumber" required>
+              <mat-error *ngIf="form.controls['contactNumber'].invalid">
+                Please enter a valid contact number.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        
+
+        <div class="name-surname flex flex-wrap flex-col content-center lg:flex-row lg:justify-center lg:mb-6">
+          <mat-form-field class="w-11/12 lg:w-40 lg:mx-1">
+            <mat-select id="barber" name="barber" class="mb-2  w-11/12 lg:w-36 lg:mx-1" formControlName="barber">
+              <mat-option value="" disabled selected>Select Barber</mat-option>
+              <mat-option *ngFor="let barber of barbers" [value]="barber.id">{{barber.firstName}} {{barber.lastName}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls['barber'].invalid">
+              Please select a barber.
+            </mat-error>
+          </mat-form-field>
+        
+          <mat-form-field class="w-11/12 lg:w-40 lg:mx-1">
+            <mat-select id="service" name="service" class="mb-2  w-11/12 lg:w-36 lg:mx-1" formControlName="service" (selectionChange)="onServiceChange($event)">
+              <mat-option value="" disabled selected>Select a service</mat-option>
+              <mat-option *ngFor="let service of services" [value]="service.id">{{service.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls['service'].invalid">
+              Please select a service.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+
+        <div class="date-time flex flex-wrap flex-col content-center lg:flex-row lg:justify-center">
+          <mat-form-field class="mb-2 w-11/12 lg:w-40  lg:mx-1" appearance="fill">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepickerFilter]="weekendsDatesFilter" [matDatepicker]="picker" formControlName="date" (dateChange)="onDateChange($event)">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker class="special"></mat-datepicker>
+        
+            <mat-error *ngIf="form.controls['date'].invalid">
+              Please select a date.
+            </mat-error>
+          </mat-form-field>
+ 
+            <mat-form-field appearance="fill" class="mb-2 w-11/12 lg:w-40 lg:mx-1">
+              <mat-select formControlName="time" (click)="onTimeChange()">
+                <mat-option value="" disabled selected>Select a time</mat-option>
+                <mat-option *ngFor="let time of times" [value]="time">{{time}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form.controls['time'].invalid">
+                Please select a time.
+              </mat-error>
+            </mat-form-field>
+    
+        </div>
+        
+        
+           
+        <div class="price-info w-auto">
+          <input type="text" disabled [placeholder]="price" class="input-price w-11/12">
+        </div>
+              
+        <div class="button-submit">
+          <button type="submit" class="p-2 mb-3 mt-5 w-11/12 mb-7 lg:w-full">BOOK APPOINTMENT</button>
+        </div>
+        
+
+      </form>
+    </mat-card>  
+    </div>
+  </section>    
+</main>

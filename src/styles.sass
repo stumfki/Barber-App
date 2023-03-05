@@ -1,0 +1,57 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base
+@tailwind components
+@tailwind utilities
+
+@import '~@angular/material/prebuilt-themes/indigo-pink.css'
+
+html
+    font-family: 'Squada One', sans-serif
+    background-color: #fcf4ea
+    height: 100%
+
+body
+    height: 100%
+
+
+
+.mat-mdc-card 
+    background-color: #1b2644 !important
+
+.mdc-text-field
+    border-radius: 4px !important
+
+
+.mat-mdc-form-field
+    height: 3.5rem
+.mat-mdc-form-field-infix
+    height: 1rem !important
+    padding: 0 !important
+.mat-mdc-select-value
+    padding: 5px
+
+/*Date Picker */
+.mdc-floating-label
+    top: 17px !important
+.mat-datepicker-input
+    padding-top: 8px !important
+
+.mat-mdc-form-field-icon-suffix
+    position: absolute
+    top: 50%
+    right: 0
+    transform: translateY(-50%)
+
+
+
+
+
+
+@media screen and (min-width: 1024px) and (max-width: 1636px)
+
+
+@media screen and (min-width: 1636px)
+    .mat-mdc-form-field
+        width: 12.5rem !important
+    .input-price, button
+        width: 25rem !important
