@@ -192,6 +192,7 @@ onTimeChange() {
               let startIndex = Math.max(j + 1, 0); 
               let endIndex = Math.min(j + appointmentLength, this.times.length); 
               let removeTimeForOtherAppointments = this.times.splice(startIndex, endIndex - startIndex);
+             
          
             }else {
               let removeTimeForOtherAppointments = this.times.splice(j, 1);
@@ -202,8 +203,10 @@ onTimeChange() {
               let startIndex = Math.max(j - serviceSelected, 0); 
               let endIndex = Math.min(j + appointmentLength, this.times.length); 
               let removeTimeForOtherAppointments = this.times.splice(startIndex + 1, serviceSelected);
+
         
-            } else {
+            } 
+            else {
               let removeTimeForOtherAppointments = this.times.splice(j, 1);
    
             }
@@ -225,6 +228,18 @@ onTimeChange() {
  if(this.times[this.times.length - 1] === this.selectedBarberEndHour + ':00') {
     let removeTimeForOtherAppointments = this.times.splice(this.times.length - serviceSelected, serviceSelected);
     }
+
+
+
+  for(let i = 0; i < serviceSelected; i++) {
+   if(this.getMinutesSinceMidnight(this.times[i + 1]) - this.getMinutesSinceMidnight(this.times[i]) !== 5) {
+
+    let removeTimeForOtherAppointments = this.times.splice(i - i, i + 1);
+
+   }
+  }
+
+
 
   
 }
