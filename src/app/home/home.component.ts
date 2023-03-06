@@ -55,6 +55,9 @@ ngOnInit() {
   });
 
   this.form.controls['time'].disable();
+  this.form.controls['date'].disable();
+
+
 
   this.form.controls['date'].valueChanges.subscribe(value => {
     this.updateTimeControlState();
@@ -62,10 +65,12 @@ ngOnInit() {
 
   this.form.controls['service'].valueChanges.subscribe(value => {
     this.updateTimeControlState();
+    this.updateTimeControlStateDate();
   });
 
   this.form.controls['barber'].valueChanges.subscribe(value => {
     this.updateTimeControlState();
+    this.updateTimeControlStateDate();
   });
 }
 
@@ -77,10 +82,21 @@ updateTimeControlState() {
 
   if (date && service && barber) {
     this.form.controls['time'].enable();
-  } else {
-    this.form.controls['time'].disable();
-  }
+  } 
+
 }
+
+updateTimeControlStateDate() {
+  const date = this.form.controls['date'].value;
+  const service = this.form.controls['service'].value;
+  const barber = this.form.controls['barber'].value;
+
+  if ( service && barber) {
+    this.form.controls['date'].enable();
+  } 
+
+}
+
 
 selectedBarberStartHour: number = 0
 selectedBarberEndHour: number = 0
@@ -105,16 +121,21 @@ onDateChange(event: any) {
 times: any[] = [];
 
 getMinutesSinceMidnight(time: string): number {
+  if (time === null || time === undefined) {
+    return 0; 
+  }
   const [hours, minutes] = time.split(':');
   const totalMinutes = (parseInt(hours) * 60) + parseInt(minutes);
   return totalMinutes;
 }
 
+
 onTimeChange() {
+  const serviceSelected = this.form?.get('service')?.value === 1 ? 4 : (this.form?.get('service')?.value === 2 ? 6 : (this.form?.get('service')?.value === 3 ? 10 : 0));
   if(!this.form.controls['time'].disabled) {
   this.times = []
   let timeCounter = this.selectedBarberStartHour;
-  //Get Starting Hours
+//Get starting hours
   for (let i = 0; i < Math.abs(this.selectedBarberStartHour - this.selectedBarberEndHour); i++) {
     for (let j = 0; j < 60; j += 5) {
       let minutes = j.toString();
@@ -129,6 +150,7 @@ onTimeChange() {
     }
     timeCounter++;
   }
+  this.times.push(this.selectedBarberEndHour + ':00')
   
 
   //Filter Brake
@@ -142,9 +164,9 @@ onTimeChange() {
       break;
     }
   }
-  
+ 
 
-  //Filter Other Appointments
+  //Filter Other Appointments and time
   for (let i = 0; i < this.appointments.length; i++) {
 
     const startTime = this.appointments[i].startDate;
@@ -155,30 +177,54 @@ onTimeChange() {
     const userDateValue = this.form?.get('date')?.value;
     const userDate = new Date(userDateValue);
     const formattedUserDate = userDate.toLocaleDateString('en-GB');
- 
-  
+    
     if (formattedDate === formattedUserDate && this.form.get('barber')?.value === this.appointments[i].barberId) {
       const hours = date.getHours();
       const minutes = date.getMinutes();
       
       for (let j = 0; j < this.times.length; j++) {
-        if (this.times[j] === (hours > 10 ? JSON.stringify(hours) : '0' + JSON.stringify(hours)) + ':' + (minutes === 0 ? "00" : (minutes === 5 ? "0" + minutes.toString() : minutes.toString().padStart(2, '0')))) {
-          const serviceSelected = this.form?.get('service')?.value === 1 ? 4 : (this.form?.get('service')?.value === 2 ? 6 : (this.form?.get('service')?.value === 3 ? 10 : 0));
+        if (this.times[j] === (hours >= 10 ? JSON.stringify(hours) : '0' + JSON.stringify(hours)) + ':' + (minutes === 0 ? "00" : (minutes === 5 ? "0" + minutes.toString() : minutes.toString().padStart(2, '0')))) {
           const appointmentLength = this.appointments[i].serviceId === 1 ? 4 : (this.appointments[i].serviceId === 2 ? 6 : (this.appointments[i].serviceId === 3 ? 10 : 0));
           const remainingElements = this.times.length;
           
-          let startIndex = Math.max(j - serviceSelected, 0); 
-          let endIndex = Math.min(j + appointmentLength, this.times.length); 
-          let removeTimeForOtherAppointments = this.times.splice(startIndex, endIndex - startIndex);
+          if (j + 1 < this.times.length) {
+            if (this.getMinutesSinceMidnight(this.times[j]) - this.getMinutesSinceMidnight(this.times[j + 1]) === -5) {
+              let startIndex = Math.max(j + 1, 0); 
+              let endIndex = Math.min(j + appointmentLength, this.times.length); 
+              let removeTimeForOtherAppointments = this.times.splice(startIndex, endIndex - startIndex);
+         
+            }else {
+              let removeTimeForOtherAppointments = this.times.splice(j, 1);
+
+            }
+           
+            if (this.getMinutesSinceMidnight(this.times[j]) - this.getMinutesSinceMidnight(this.times[j - 1]) === 5) {
+              let startIndex = Math.max(j - serviceSelected, 0); 
+              let endIndex = Math.min(j + appointmentLength, this.times.length); 
+              let removeTimeForOtherAppointments = this.times.splice(startIndex + 1, serviceSelected);
+        
+            } else {
+              let removeTimeForOtherAppointments = this.times.splice(j, 1);
+   
+            }
+          } 
+          //Filter First option if there is a gap
+          if (this.getMinutesSinceMidnight(this.times[this.times.length - 1]) - this.getMinutesSinceMidnight(this.times[this.times.length - 2]) !== 5) {
+            let removeTimeForOtherAppointments = this.times.splice(this.times.length - 1, 1);
+          }
+          //Filter Last Option if there is a gap
+          if (this.getMinutesSinceMidnight(this.times[0]) - this.getMinutesSinceMidnight(this.times[1]) !== -5) {
+     
+            let removeTimeForOtherAppointments = this.times.splice(0, 1);
+          }
         }
       }
     }
-    
   }
-
-
-
-  
+//Filter last three options if nothing is selected
+ if(this.times[this.times.length - 1] === this.selectedBarberEndHour + ':00') {
+    let removeTimeForOtherAppointments = this.times.splice(this.times.length - serviceSelected, serviceSelected);
+    }
 
   
 }
@@ -217,7 +263,6 @@ onSubmit() {
   if (this.form != null) {
 
   //Convert to unix
-
       const dateString = this.form.get('date')?.value;
       const timeString = this.form.get('time')?.value;
       const date = new Date(dateString);
@@ -225,8 +270,6 @@ onSubmit() {
       date.setHours(hours);
       date.setMinutes(minutes);
       const unixTimestamp = Math.floor(date.getTime() / 1000);
-
-  //--------------
 
 
     const formData = {
@@ -241,7 +284,6 @@ onSubmit() {
   this.submitted = true;
 
   if (this.form.valid) {
-   
       this.DataService.postData(this.formUnix).subscribe(
         (response) => {
           console.log('Appointment saved successfully', response);

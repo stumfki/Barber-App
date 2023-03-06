@@ -22,14 +22,14 @@
       <form (submit)="onSubmit()" class="" [formGroup]="form">
 
         <div class="name-surname flex flex-wrap flex-col content-center lg:flex-row lg:justify-center lg:mb-3">
-          <mat-form-field class="name-surname mb-2 w-11/12 lg:w-40 lg:mx-1">
+          <mat-form-field class="name-surname  w-11/12 lg:w-40 lg:mx-1">
             <input matInput type="text" placeholder="First Name" formControlName="name" required class="h-10">
             <mat-error *ngIf="form.controls['name'].invalid">
               Please enter your first name.
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field class="name-surname mb-2 w-11/12 lg:w-40 lg:mx-1">
+          <mat-form-field class="name-surname  w-11/12 lg:w-40 lg:mx-1">
             <input matInput type="text" placeholder="Last Name" formControlName="surname" required>
             <mat-error *ngIf="form.controls['surname'].invalid">
             Please enter your last name.
@@ -39,7 +39,7 @@
 
         <div class="email-contact flex flex-wrap flex-col content-center lg:flex-row lg:justify-center">
           <div class="w-ful lg:w-auto lg:mb-3">
-            <mat-form-field class="email-contact mb-2 w-11/12 lg:w-40 lg:mx-1">
+            <mat-form-field class="email-contact  w-11/12 lg:w-40 lg:mx-1">
               <input matInput type="email" placeholder="Email" formControlName="email" required>
               <mat-error *ngIf="form.controls['email'].invalid">
                 Please enter a valid email.
@@ -48,7 +48,7 @@
           </div>
         
           <div class="w-full lg:w-auto">
-            <mat-form-field class="email-contact mb-2 w-11/12 lg:w-40 lg:mx-1 lg:mb-2">
+            <mat-form-field class="email-contact  w-11/12 lg:w-40 lg:mx-1 lg:mb-2">
               <input matInput type="tel" placeholder="Contact Number" formControlName="contactNumber" required>
               <mat-error *ngIf="form.controls['contactNumber'].invalid">
                 Please enter a valid contact number.
@@ -60,7 +60,7 @@
 
         <div class="name-surname flex flex-wrap flex-col content-center lg:flex-row lg:justify-center lg:mb-6">
           <mat-form-field class="w-11/12 lg:w-40 lg:mx-1">
-            <mat-select id="barber" name="barber" class="mb-2  w-11/12 lg:w-36 lg:mx-1" formControlName="barber">
+            <mat-select id="barber" name="barber" class="  w-11/12 lg:w-36 lg:mx-1" formControlName="barber">
               <mat-option value="" disabled selected>Select Barber</mat-option>
               <mat-option *ngFor="let barber of barbers" [value]="barber.id">{{barber.firstName}} {{barber.lastName}}</mat-option>
             </mat-select>
@@ -70,7 +70,7 @@
           </mat-form-field>
         
           <mat-form-field class="w-11/12 lg:w-40 lg:mx-1">
-            <mat-select id="service" name="service" class="mb-2  w-11/12 lg:w-36 lg:mx-1" formControlName="service" (selectionChange)="onServiceChange($event)">
+            <mat-select id="service" name="service" class="  w-11/12 lg:w-36 lg:mx-1" formControlName="service" (selectionChange)="onServiceChange($event)">
               <mat-option value="" disabled selected>Select a service</mat-option>
               <mat-option *ngFor="let service of services" [value]="service.id">{{service.name}}</mat-option>
             </mat-select>
@@ -82,7 +82,7 @@
         
 
         <div class="date-time flex flex-wrap flex-col content-center lg:flex-row lg:justify-center">
-          <mat-form-field class="mb-2 w-11/12 lg:w-40  lg:mx-1" appearance="fill">
+          <mat-form-field class=" w-11/12 lg:w-40  lg:mx-1" appearance="fill">
             <mat-label>Date</mat-label>
             <input matInput [matDatepickerFilter]="weekendsDatesFilter" [matDatepicker]="picker" formControlName="date" (dateChange)="onDateChange($event)">
             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -112,7 +112,7 @@
         </div>
               
         <div class="button-submit">
-          <button type="submit" class="p-2 mb-3 mt-5 w-11/12 mb-7 lg:w-full">BOOK APPOINTMENT</button>
+          <button type="submit" class="button-submit-button p-2 mb-3 mt-5 w-11/12 mb-7 lg:w-full">BOOK APPOINTMENT</button>
         </div>
         
 
