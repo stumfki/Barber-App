@@ -293,6 +293,16 @@ export class HomeComponent implements OnInit {
           serviceSelected
         );
       }
+
+      for (let i = 0; i < serviceSelected; i++) {
+        if (
+          this.getMinutesSinceMidnight(this.times[i]) -
+            this.getMinutesSinceMidnight(this.times[i + 1]) !==
+          -5
+        ) {
+          let removeTimeForOtherAppointments = this.times.splice(i, 1);
+        }
+      }
     }
   }
 
