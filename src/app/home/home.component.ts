@@ -166,8 +166,6 @@ export class HomeComponent implements OnInit {
         timeCounter++;
       }
 
-      this.times.push(this.selectedBarberEndHour + ':00');
-
       //Filter Brake
       let timeCounters = this.selectedBarberBrakeStart;
       let barberBrakeFilter: string[] = [];
@@ -288,10 +286,10 @@ export class HomeComponent implements OnInit {
       //Filter last options if no appointments
       if (
         this.times[this.times.length - 1] ===
-        this.selectedBarberEndHour + ':00'
+        this.selectedBarberEndHour - 1 + ':55'
       ) {
         let removeTimeForOtherAppointments = this.times.splice(
-          this.times.length - serviceSelected,
+          this.times.length - serviceSelected + 1,
           serviceSelected
         );
       }
