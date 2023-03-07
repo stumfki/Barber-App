@@ -10,20 +10,16 @@ interface GiphyResponse {
 @Component({
   selector: 'app-succes',
   templateUrl: './succes.component.html',
-  styleUrls: ['./succes.component.sass']
+  styleUrls: ['./succes.component.sass'],
 })
 export class SuccesComponent {
-constructor(private giphyService: DataService) { }
+  constructor(private giphyService: DataService) {}
 
-image: string = ""
+  image: string = '';
 
-
-
-ngOnInit(): void {
-  this.giphyService.getGifImage().subscribe(image => {
-    this.image = image;
-  });
-}
-
-
+  ngOnInit(): void {
+    this.giphyService.getGifImage().subscribe((image) => {
+      this.image = image;
+    });
+  }
 }
