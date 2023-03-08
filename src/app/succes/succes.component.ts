@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DataService } from '../data.service';
+import { dataService } from '../data.service';
 
 interface GiphyResponse {
   data: any[];
@@ -13,7 +13,7 @@ interface GiphyResponse {
   styleUrls: ['./succes.component.sass'],
 })
 export class SuccesComponent {
-  constructor(private giphyService: DataService) {}
+  constructor(private giphyService: dataService) {}
 
   image: string = '';
 

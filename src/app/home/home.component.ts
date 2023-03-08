@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { DataService } from '../data.service';
+import { dataService } from '../data.service';
 import { sloveneNumberValidator } from '../validators/slovene-number.validator';
-import { time } from '../addTime.service'
-import { filter } from 'rxjs';
+import { time } from '../addTime.service';
 
 @Component({
   selector: 'app-home',
@@ -20,21 +19,21 @@ export class HomeComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private DataService: DataService,
+    private dataServiceApi: dataService,
     private router: Router,
     private time: time
   ) {
-    this.DataService.getServices().subscribe((data) => {
+    this.dataServiceApi.getServices().subscribe((data) => {
       for (let item of data) {
         this.services.push(item);
       }
     });
 
-    this.DataService.getBarbers().subscribe((data) => {
+    this.dataServiceApi.getBarbers().subscribe((data) => {
       this.barbers = data;
     });
 
-    this.DataService.getAppointments().subscribe((data) => {
+    this.dataServiceApi.getAppointments().subscribe((data) => {
       for (let appointment of data) {
         this.appointments.push(appointment);
       }
@@ -102,7 +101,7 @@ export class HomeComponent implements OnInit {
   onDateChange(event: any) {
     const dayOfWeek = ((event.value.getDay() + 6) % 7) + 1;
 
-    this.DataService.getBarbers().subscribe((data) => {
+    this.dataServiceApi.getBarbers().subscribe((data) => {
       const selectedBarber = this.form?.get('barber')?.value;
 
       this.selectedBarberStartHour =
@@ -235,27 +234,21 @@ export class HomeComponent implements OnInit {
                 ? 10
                 : 0;
 
-                for (let k = 0; k < appointmentLength; k++) {
-                  let minutes = startMinutes.toString().padStart(2, '0');
-                  let hours = bookedCounters.toString().padStart(2, '0');
-                
-                  let timeString = hours + ':' + minutes;
-                
-                  filterBooked.push(timeString);
-                
-                  startMinutes += 5;
-                
-                  if (startMinutes >= 60) {
-                    startMinutes = 0;
-                    bookedCounters += 1;
-                  }
-                }
-                
-    
+            for (let k = 0; k < appointmentLength; k++) {
+              let minutes = startMinutes.toString().padStart(2, '0');
+              let hours = bookedCounters.toString().padStart(2, '0');
 
-   
-           
-              
+              let timeString = hours + ':' + minutes;
+
+              filterBooked.push(timeString);
+
+              startMinutes += 5;
+
+              if (startMinutes >= 60) {
+                startMinutes = 0;
+                bookedCounters += 1;
+              }
+            }
 
             let bookedHoursBackwards = hours;
             let startMinutesBackwards = minutes;
@@ -276,7 +269,6 @@ export class HomeComponent implements OnInit {
                 ':' +
                 minutes;
               filterBooked.push(timeString);
-             
 
               startMinutesBackwards -= 5;
 
@@ -285,19 +277,17 @@ export class HomeComponent implements OnInit {
                 startMinutesBackwards = 55;
               }
             }
-         
-            this.reservedTimesBehind.push(filterBooked[filterBooked.length - 1])
-     
+
+            this.reservedTimesBehind.push(
+              filterBooked[filterBooked.length - 1]
+            );
+
             this.times = this.times.filter(
               (time) => !filterBooked.includes(time)
             );
-                  
           }
-         
         }
-    
       }
-
 
       //Filter last options if no appointments
       if (
@@ -310,30 +300,24 @@ export class HomeComponent implements OnInit {
         );
       }
 
-      let reservedTimesBehindSubtracted = this.time.subtractTime(this.reservedTimesBehind)
-
-      for (let i = 0; i < serviceSelected ; i++) {
-
-        if (this.getMinutesSinceMidnight(this.times[i]) - this.getMinutesSinceMidnight(this.times[i + 1]) !== -5 && reservedTimesBehindSubtracted.includes(this.times[i]) && i > 1) {
-
-
-          let removeTimeForOtherAppointments = this.times.splice(
-            0,
-            i + 1
-          );
-
+      let reservedTimesBehindSubtracted = this.time.subtractTime(
+        this.reservedTimesBehind
+      );
+      //Filter first options if there is a gap
+      for (let i = 0; i < serviceSelected; i++) {
+        if (
+          this.getMinutesSinceMidnight(this.times[i]) -
+            this.getMinutesSinceMidnight(this.times[i + 1]) !==
+            -5 &&
+          !reservedTimesBehindSubtracted.includes(this.times[i]) &&
+          i > 1
+        ) {
+          let removeTimeForOtherAppointments = this.times.splice(0, i + 1);
           break;
-
-          
-        
         }
-         
+      }
     }
-    
-    
   }
- 
-}
 
   weekendsDatesFilter = (d: Date | null): boolean => {
     const day = (d || new Date()).getDay();
@@ -378,7 +362,7 @@ export class HomeComponent implements OnInit {
     this.submitted = true;
 
     if (this.form.valid) {
-      this.DataService.postData(this.formUnix).subscribe(
+      this.dataServiceApi.postData(this.formUnix).subscribe(
         (response) => {
           console.log('Appointment saved successfully', response);
           this.router.navigate(['/success']);

@@ -17,7 +17,7 @@ interface GiphyResponse {
 @Injectable({
   providedIn: 'root'
 })
-export class DataService {
+export class dataService {
   private apiUrl = "http://localhost:3000"
   private readonly API_URL = 'http://api.giphy.com/v1/gifs/search';
   private readonly API_KEY = 'KeTn0RgXZQF8EDkUGgQmSaJYuWPEz5mI';

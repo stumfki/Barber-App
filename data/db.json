@@ -133,6 +133,12 @@
       "startDate": 1579685400,
       "barberId": 1,
       "serviceId": 2
+    },
+    {
+      "startDate": 1678268400,
+      "barberId": 1,
+      "serviceId": 1,
+      "id": 4
     }
   ],
   "workHours": [
