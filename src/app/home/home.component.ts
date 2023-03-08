@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { sloveneNumberValidator } from '../validators/slovene-number.validator';
+import { time } from '../addTime.service'
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +21,8 @@ export class HomeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private DataService: DataService,
-    private router: Router
+    private router: Router,
+    private time: time
   ) {
     this.DataService.getServices().subscribe((data) => {
       for (let item of data) {
@@ -117,6 +120,7 @@ export class HomeComponent implements OnInit {
   }
 
   times: any[] = [];
+  reservedTimesBehind: any[] = [];
 
   getMinutesSinceMidnight(time: string): number {
     if (time === null || time === undefined) {
@@ -211,7 +215,7 @@ export class HomeComponent implements OnInit {
         const hours = date.getHours();
         const minutes = date.getMinutes();
 
-        let FilterBooked: string[] = [];
+        let filterBooked: string[] = [];
 
         if (
           formattedDate === formattedUserDate &&
@@ -221,6 +225,7 @@ export class HomeComponent implements OnInit {
             // Iterate over the remaining 5-minute intervals
             let bookedCounters = hours;
             let startMinutes = minutes;
+
             const appointmentLength =
               this.appointments[i].serviceId === 1
                 ? 4
@@ -230,23 +235,27 @@ export class HomeComponent implements OnInit {
                 ? 10
                 : 0;
 
-            for (let k = 0; k < appointmentLength; k++) {
-              let minutes = startMinutes.toString();
+                for (let k = 0; k < appointmentLength; k++) {
+                  let minutes = startMinutes.toString().padStart(2, '0');
+                  let hours = bookedCounters.toString().padStart(2, '0');
+                
+                  let timeString = hours + ':' + minutes;
+                
+                  filterBooked.push(timeString);
+                
+                  startMinutes += 5;
+                
+                  if (startMinutes >= 60) {
+                    startMinutes = 0;
+                    bookedCounters += 1;
+                  }
+                }
+                
+    
 
-              if (startMinutes === 0) {
-                minutes = '00';
-              }
-
-              if (startMinutes === 5) {
-                minutes = '0' + 5;
-              }
-
-              startMinutes += 5;
-              let timeString =
-                bookedCounters.toString().padStart(2, '0') + ':' + minutes;
-              FilterBooked.push(timeString);
-            }
-            bookedCounters++;
+   
+           
+              
 
             let bookedHoursBackwards = hours;
             let startMinutesBackwards = minutes;
@@ -266,7 +275,8 @@ export class HomeComponent implements OnInit {
                 bookedHoursBackwards.toString().padStart(2, '0') +
                 ':' +
                 minutes;
-              FilterBooked.push(timeString);
+              filterBooked.push(timeString);
+             
 
               startMinutesBackwards -= 5;
 
@@ -275,13 +285,19 @@ export class HomeComponent implements OnInit {
                 startMinutesBackwards = 55;
               }
             }
-
+         
+            this.reservedTimesBehind.push(filterBooked[filterBooked.length - 1])
+     
             this.times = this.times.filter(
-              (time) => !FilterBooked.includes(time)
+              (time) => !filterBooked.includes(time)
             );
+                  
           }
+         
         }
+    
       }
+
 
       //Filter last options if no appointments
       if (
@@ -294,17 +310,30 @@ export class HomeComponent implements OnInit {
         );
       }
 
-      for (let i = 0; i < serviceSelected; i++) {
-        if (
-          this.getMinutesSinceMidnight(this.times[i]) -
-            this.getMinutesSinceMidnight(this.times[i + 1]) !==
-          -5
-        ) {
-          let removeTimeForOtherAppointments = this.times.splice(i, 1);
+      let reservedTimesBehindSubtracted = this.time.subtractTime(this.reservedTimesBehind)
+
+      for (let i = 0; i < serviceSelected ; i++) {
+
+        if (this.getMinutesSinceMidnight(this.times[i]) - this.getMinutesSinceMidnight(this.times[i + 1]) !== -5 && reservedTimesBehindSubtracted.includes(this.times[i]) && i > 1) {
+
+
+          let removeTimeForOtherAppointments = this.times.splice(
+            0,
+            i + 1
+          );
+
+          break;
+
+          
+        
         }
-      }
+         
     }
+    
+    
   }
+ 
+}
 
   weekendsDatesFilter = (d: Date | null): boolean => {
     const day = (d || new Date()).getDay();
