@@ -364,11 +364,11 @@ export class HomeComponent implements OnInit {
     if (this.form.valid) {
       this.dataServiceApi.postData(this.formUnix).subscribe(
         (response) => {
-          console.log('Appointment saved successfully', response);
+          
           this.router.navigate(['/success']);
         },
         (error) => {
-          console.log('Error while saving appointment', error);
+     
         }
       );
     }
