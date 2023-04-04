@@ -1,27 +1,28 @@
-# Ineor
+**Barber App Documentation**
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.0.
+**Introduction:**
 
-## Development server
+The Angular Barber App is a responsive application built with Angular 11 and Angular Material UI components. It is designed to help users book appointments with a barber, by selecting a preferred date and time. The app uses reactive forms to verify user data and filters out other dates and times that have already been booked by other users. The backend of the app is mocked by a JSON mock backend, and once the user successfully books an appointment, the date and time are saved in Unix time and sent to the backend server. The app also uses Tailwind CSS for styling.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+**Getting Started:**
 
-## Code scaffolding
+To get started with the Angular Barber App, you need to have Node.js installed on your machine. Once you have Node.js installed, you can download the app source code from the GitHub repository and install the dependencies using the following command:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+npm install
 
-## Build
+**Running the App:**
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+To run the Angular Barber App, you can use the following command in the terminal:
 
-## Running unit tests
+npm start
+This will start a local server on your machine, and you can access the app by opening a web browser and navigating to http://localhost:4200/
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+**Using the App:**
 
-## Running end-to-end tests
+The Angular Barber App has a simple and user-friendly interface, with a landing page that displays a calendar widget and a list of available time slots. The user can select a date and time from the calendar widget and then choose a time slot from the list of available time slots. The user is required to provide their name, email, and phone number to book an appointment. The app uses reactive forms to verify the user's data, and the user will receive an error message if any of the required fields are missing or if the data is not valid.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Once the user successfully books an appointment, the app will send the data to the backend server and mark the selected date and time as unavailable for future bookings. The app will also filter out other dates and times that have already been booked by other users, to ensure that the user can only select available time slots.
 
-## Further help
+**Conclusion:**
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+The Angular Barber App is a responsive and user-friendly application that helps users book appointments with a barber. It uses reactive forms to verify user data, filters out other dates and times, and has its own mocked backend. The app is built with Angular Material UI components and Tailwind CSS for styling, and is easy to use and customize.
